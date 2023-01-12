@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "clean": "rm dist/*"
+    "clean": "shx rm -rf dist && shx echo Done"
   },
   "keywords": [],
   "author": {
