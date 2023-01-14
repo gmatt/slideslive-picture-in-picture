@@ -17,6 +17,34 @@
         return element;
     };
 
+    if (location.hostname != "slideslive.com") {
+        // The bookmarklet currently doesn't work with embedded SlidesLive for CORS reasons.
+        // We open the iframe on a new tab and ask the user to run the bookmarklet there.
+
+        const [slidesLiveIframe] = [
+            ...document.getElementsByTagName("iframe"),
+        ].filter((e) => e.src.includes("slideslive.com"));
+
+        if (slidesLiveIframe) {
+            const newWindow = window.open(slidesLiveIframe.src, "_blank");
+
+            // Check if popup was blocked. This should only happen if the script is used in some other ways, not as a bookmarklet.
+            if (!newWindow) {
+                alert(
+                    "The popup window seems to be blocked.\nClick the popup icon in the address bar to continue.",
+                );
+            } else {
+                newWindow.alert(
+                    "Please run the bookmarklet again in this tab.",
+                );
+            }
+        } else {
+            alert("Cannot find a SlidesLive video on the current page.");
+        }
+
+        return;
+    }
+
     const originalVideo = getVideo();
     // TODO Check if needed.
     originalVideo.crossOrigin = "anonymous";
