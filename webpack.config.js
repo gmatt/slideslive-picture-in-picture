@@ -11,6 +11,7 @@ module.exports = {
     plugins: [
         new BookmarkletPlugin({
             input: "main.js",
+            linkName: "SlidesLive PiP",
         }),
     ],
 };
