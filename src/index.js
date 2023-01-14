@@ -14,12 +14,12 @@ const getSlideImage = () => {
     return element;
 };
 
-var originalVideo = getVideo();
+const originalVideo = getVideo();
 // TODO Check if needed.
 originalVideo.crossOrigin = "anonymous";
 
 // We copy the main video. This is a way to get around CORS limitations.
-var addedVideo = document.createElement("video");
+const addedVideo = document.createElement("video");
 addedVideo.src = originalVideo.src;
 addedVideo.crossOrigin = "anonymous";
 document.body.appendChild(addedVideo);
@@ -27,31 +27,38 @@ addedVideo.muted = true;
 addedVideo.play();
 addedVideo.width = originalVideo.width;
 
-var slideImage = getSlideImage();
+const slideImage = getSlideImage();
 
-var canvas = document.createElement("canvas");
+const canvas = document.createElement("canvas");
 canvas.width = originalVideo.clientWidth + slideImage.width;
 canvas.height = Math.max(originalVideo.clientHeight, slideImage.height);
+// For retina.
 canvas.width *= window.devicePixelRatio;
 canvas.height *= window.devicePixelRatio;
 
 document.body.appendChild(canvas);
 
-var videoOutput = document.createElement("video");
-videoOutput.width = 640;
-videoOutput.width = 480;
-videoOutput.playsInline = true;
-videoOutput.autoplay = true;
+const outputVideo = document.createElement("video");
+// TODO Check if needed.
+outputVideo.width = 640;
+outputVideo.width = 480;
+outputVideo.playsInline = true;
+outputVideo.autoplay = true;
 // videoOutput.muted = true;
 
-document.body.appendChild(videoOutput);
+document.body.appendChild(outputVideo);
 
-videoOutput.srcObject = canvas.captureStream();
+outputVideo.srcObject = canvas.captureStream();
 
-var ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");
+if (!ctx) {
+    throw Error("Can't get canvas context.");
+}
+// Set resolution for retina screens.
 ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-var loop = () => {
+const mainLoop = () => {
+    // Sync the timestamp of the original video with the added video.
     if (Math.abs(addedVideo.currentTime - originalVideo.currentTime) > 0.5) {
         addedVideo.currentTime = originalVideo.currentTime;
     }
@@ -68,23 +75,33 @@ var loop = () => {
     );
 
     /** @type {HTMLImageElement} */
-    var image = document.querySelector(".slp__slidesPlayer__content img");
-    ctx.drawImage(image, originalVideo.clientWidth, 0, image.width, image.height);
+    // TODO Check if needed.
+    const slideImage = getSlideImage();
+
+    ctx.drawImage(
+        slideImage,
+        originalVideo.clientWidth,
+        0,
+        slideImage.width,
+        slideImage.height,
+    );
 
     // requestAnimationFrame(loop);
-    setTimeout(loop);
+    setTimeout(mainLoop);
 };
 // requestAnimationFrame(loop);
-loop();
+mainLoop();
 
-button = document.createElement("button");
+// Add 'pip' button.
+const button = document.createElement("button");
 button.textContent = "pip";
 document.body.appendChild(button);
-button.addEventListener("click", async function () {
+button.addEventListener("click", async () => {
     if (document.pictureInPictureEnabled) {
-        videoOutput.requestPictureInPicture();
+        outputVideo.requestPictureInPicture();
     } else {
-        videvideoOutputo.play();
-        videoOutput.webkitSetPresentationMode("picture-in-picture");
+        // TODO Check if needed for Safari.
+        outputVideo.play();
+        outputVideo.webkitSetPresentationMode("picture-in-picture");
     }
 });
