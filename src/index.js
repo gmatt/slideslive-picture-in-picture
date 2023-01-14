@@ -1,7 +1,6 @@
 // @ts-check
 
 var video = document.getElementsByTagName("video")[0];
-// video.crossOrigin = "anonymous";
 video.crossOrigin = "anonymous";
 
 var video2 = document.createElement("video");
@@ -37,8 +36,6 @@ videoOutput.srcObject = canvas.captureStream();
 var ctx = canvas.getContext("2d");
 ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-// videoOutput.webkitSetPresentationMode("picture-in-picture");
-
 var loop = () => {
     if (Math.abs(video2.currentTime - video.currentTime) > 0.5) {
         video2.currentTime = video.currentTime;
@@ -52,10 +49,6 @@ var loop = () => {
     /** @type {HTMLImageElement} */
     var image = document.querySelector(".slp__slidesPlayer__content img");
     ctx.drawImage(image, video.clientWidth, 0, image.width, image.height);
-
-    // ctx.beginPath();
-    // ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-    // ctx.stroke();
 
     // requestAnimationFrame(loop);
     setTimeout(loop);
@@ -71,9 +64,6 @@ button.addEventListener("click", async function () {
         videoOutput.requestPictureInPicture();
     } else {
         videvideoOutputo.play();
-        // const endTime = new Date();
-        // endTime.setSeconds(endTime.getSeconds() + (minutes.valueAsNumber * 60) + seconds.valueAsNumber);
-        // drawCanvasRemainingTime(endTime);
         videoOutput.webkitSetPresentationMode("picture-in-picture");
     }
 });
