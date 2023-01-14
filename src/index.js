@@ -1,22 +1,37 @@
 // @ts-check
 
-var video = document.getElementsByTagName("video")[0];
-video.crossOrigin = "anonymous";
+/** @type {() => HTMLVideoElement} */
+const getVideo = () => {
+    return document.getElementsByTagName("video")[0];
+};
 
-var video2 = document.createElement("video");
-video2.src = video.src;
-video2.crossOrigin = "anonymous";
-document.body.appendChild(video2);
-video2.muted = true;
-video2.play();
-video2.width = video.width;
+/** @type {() => HTMLImageElement} */
+const getSlideImage = () => {
+    const element = document.querySelector(".slp__slidesPlayer__content img");
+    if (!(element instanceof HTMLImageElement)) {
+        throw Error("Slide image not found.");
+    }
+    return element;
+};
 
-/** @type {HTMLImageElement} */
-var image = document.querySelector(".slp__slidesPlayer__content img");
+var originalVideo = getVideo();
+// TODO Check if needed.
+originalVideo.crossOrigin = "anonymous";
+
+// We copy the main video. This is a way to get around CORS limitations.
+var addedVideo = document.createElement("video");
+addedVideo.src = originalVideo.src;
+addedVideo.crossOrigin = "anonymous";
+document.body.appendChild(addedVideo);
+addedVideo.muted = true;
+addedVideo.play();
+addedVideo.width = originalVideo.width;
+
+var slideImage = getSlideImage();
 
 var canvas = document.createElement("canvas");
-canvas.width = video.clientWidth + image.width;
-canvas.height = Math.max(video.clientHeight, image.height);
+canvas.width = originalVideo.clientWidth + slideImage.width;
+canvas.height = Math.max(originalVideo.clientHeight, slideImage.height);
 canvas.width *= window.devicePixelRatio;
 canvas.height *= window.devicePixelRatio;
 
@@ -37,18 +52,24 @@ var ctx = canvas.getContext("2d");
 ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
 var loop = () => {
-    if (Math.abs(video2.currentTime - video.currentTime) > 0.5) {
-        video2.currentTime = video.currentTime;
+    if (Math.abs(addedVideo.currentTime - originalVideo.currentTime) > 0.5) {
+        addedVideo.currentTime = originalVideo.currentTime;
     }
 
     // var video = document.getElementsByTagName("video")[0];
     // ctx.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);
 
-    ctx.drawImage(video2, 0, 0, video.clientWidth, video.clientHeight);
+    ctx.drawImage(
+        addedVideo,
+        0,
+        0,
+        originalVideo.clientWidth,
+        originalVideo.clientHeight,
+    );
 
     /** @type {HTMLImageElement} */
     var image = document.querySelector(".slp__slidesPlayer__content img");
-    ctx.drawImage(image, video.clientWidth, 0, image.width, image.height);
+    ctx.drawImage(image, originalVideo.clientWidth, 0, image.width, image.height);
 
     // requestAnimationFrame(loop);
     setTimeout(loop);
