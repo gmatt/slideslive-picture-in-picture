@@ -114,4 +114,9 @@
             outputVideo.requestPictureInPicture();
         }
     });
+
+    // Sync play button, clicking 'pause' in the PiP window should pause the main video.
+    outputVideo.addEventListener("pause", () => originalVideo.pause());
+    outputVideo.addEventListener("play", () => originalVideo.play());
+    originalVideo.addEventListener("play", () => outputVideo.play());
 })();
