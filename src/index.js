@@ -17,7 +17,11 @@
         return element;
     };
 
-    if (location.hostname != "slideslive.com") {
+    /** @type {() => boolean} */
+    const handleNotOnSlidesLive = () => {
+        if (location.hostname === "slideslive.com") {
+            return false;
+        }
         // The bookmarklet currently doesn't work with embedded SlidesLive for CORS reasons.
         // We open the iframe on a new tab and ask the user to run the bookmarklet there.
 
@@ -27,7 +31,7 @@
 
         if (!slidesLiveIframe) {
             alert("Cannot find a SlidesLive video on the current page.");
-            return;
+            return true;
         }
 
         const newWindow = window.open(slidesLiveIframe.src, "_blank");
@@ -42,6 +46,11 @@
         newWindow &&
             newWindow.alert("Please run the bookmarklet again in this tab.");
 
+        return true;
+    };
+
+    const shouldExit = handleNotOnSlidesLive();
+    if (shouldExit) {
         return;
     }
 
