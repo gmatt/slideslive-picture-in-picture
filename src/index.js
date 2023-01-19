@@ -58,15 +58,6 @@
     // TODO Check if needed.
     originalVideo.crossOrigin = "anonymous";
 
-    // We copy the main video. This is a way to get around CORS limitations.
-    const addedVideo = document.createElement("video");
-    addedVideo.src = originalVideo.src;
-    addedVideo.crossOrigin = "anonymous";
-    document.body.appendChild(addedVideo);
-    addedVideo.muted = true;
-    addedVideo.play();
-    addedVideo.width = originalVideo.width;
-
     const slideImage = getSlideImage();
 
     const canvas = document.createElement("canvas");
@@ -76,10 +67,9 @@
     canvas.width *= window.devicePixelRatio;
     canvas.height *= window.devicePixelRatio;
 
-    document.body.appendChild(canvas);
+    // document.body.appendChild(canvas);
 
     const outputVideo = document.createElement("video");
-    // TODO Check if needed.
     outputVideo.width = 640;
     outputVideo.width = 480;
     outputVideo.playsInline = true;
@@ -98,28 +88,9 @@
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
     const mainLoop = () => {
-        // Sync the timestamp of the original video with the added video.
-        if (
-            Math.abs(addedVideo.currentTime - originalVideo.currentTime) > 0.5
-        ) {
-            addedVideo.currentTime = originalVideo.currentTime;
-        }
-
-        // var video = document.getElementsByTagName("video")[0];
-        // ctx.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);
-
-        ctx.drawImage(
-            addedVideo,
-            0,
-            0,
-            originalVideo.clientWidth,
-            originalVideo.clientHeight,
-        );
-
-        /** @type {HTMLImageElement} */
-        // TODO Check if needed.
+        var video = getVideo();
+        ctx.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);
         const slideImage = getSlideImage();
-
         ctx.drawImage(
             slideImage,
             originalVideo.clientWidth,
@@ -128,10 +99,10 @@
             slideImage.height,
         );
 
-        // requestAnimationFrame(loop);
+        // requestAnimationFrame(mainLoop);
         setTimeout(mainLoop);
     };
-    // requestAnimationFrame(loop);
+    // requestAnimationFrame(mainLoop);
     mainLoop();
 
     // Add 'pip' button.
@@ -141,10 +112,6 @@
     button.addEventListener("click", async () => {
         if (document.pictureInPictureEnabled) {
             outputVideo.requestPictureInPicture();
-        } else {
-            // TODO Check if needed for Safari.
-            outputVideo.play();
-            outputVideo.webkitSetPresentationMode("picture-in-picture");
         }
     });
 })();
