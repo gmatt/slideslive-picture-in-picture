@@ -35,6 +35,7 @@ Open the page above and drag the blue box to the bookmarks bar (enable the bookm
         npm run build
         ```
     -   The output will be in `dist/index.html`.
+    -   GitHub Actions builds and deploys the changes on push to the `main` branch.
 
 ### Troubleshooting
 
