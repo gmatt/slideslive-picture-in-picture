@@ -91,6 +91,7 @@
         var video = getVideo();
         ctx.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);
         const slideImage = getSlideImage();
+        slideImage.crossOrigin = "anonymous";
         ctx.drawImage(
             slideImage,
             originalVideo.clientWidth,
