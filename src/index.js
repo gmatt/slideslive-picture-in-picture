@@ -49,6 +49,24 @@
         return true;
     };
 
+    /**
+     * `setInterval()` gets throttled when the tab is in the background in
+     * Safari.
+     *
+     * This version of `setInterval()` tries to solve this problem, and runs
+     * with more accurate timing when in background.
+     *
+     * @type {(callback: () => void, ms: number) => void}
+     */
+    const reliableSetInterval = (callback, ms) => {
+        const worker = new Worker(
+            URL.createObjectURL(
+                new Blob([`setInterval(() => self.postMessage(null), ${ms});`]),
+            ),
+        );
+        worker.onmessage = () => callback();
+    };
+
     const shouldExit = handleNotOnSlidesLive();
     if (shouldExit) {
         return;
@@ -99,12 +117,10 @@
             slideImage.width,
             slideImage.height,
         );
-
-        // requestAnimationFrame(mainLoop);
-        setTimeout(mainLoop);
     };
-    // requestAnimationFrame(mainLoop);
-    mainLoop();
+
+    // TODO Check if there is a better solution for timing.
+    reliableSetInterval(mainLoop, 1000 / 120);
 
     // Add 'pip' button.
     const button = document.createElement("button");
