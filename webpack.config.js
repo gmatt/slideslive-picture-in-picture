@@ -12,6 +12,8 @@ module.exports = {
         new BookmarkletPlugin({
             input: "main.js",
             linkName: "SlidesLive PiP",
+            pageTitle: "SlidesLive Picture-in-Picture Bookmarklet",
+            repo: "https://github.com/gmatt/slideslive-picture-in-picture",
         }),
     ],
 };
