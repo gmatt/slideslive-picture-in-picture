@@ -133,6 +133,9 @@
 
     // Add 'pip' button.
     const button = document.createElement("button");
+    button.style.color = "black";
+    button.style.backgroundColor = "lightgray";
+    button.style.padding = "0.2em";
     button.textContent = "pip";
     document.body.appendChild(button);
     button.addEventListener("click", async () => {
