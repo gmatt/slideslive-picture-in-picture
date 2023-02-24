@@ -120,7 +120,16 @@
     };
 
     // TODO Check if there is a better solution for timing.
-    reliableSetInterval(mainLoop, 1000 / 120);
+    let callbackHandle = originalVideo.requestVideoFrameCallback(mainLoop);
+    reliableSetInterval(
+        () => {
+            originalVideo.cancelVideoFrameCallback(callbackHandle);
+            callbackHandle = originalVideo.requestVideoFrameCallback(mainLoop);
+        },
+        // Just a shot in the dark of a high enough number.
+        1000 / 120,
+    );
+    originalVideo.requestVideoFrameCallback(mainLoop);
 
     // Add 'pip' button.
     const button = document.createElement("button");
