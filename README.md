@@ -8,9 +8,6 @@ Enabling PiP for a video is not complicated, it works out-of-the-box in Safari, 
 
 ## Usage
 
-:warning: This code is a work in progress!  
-Although the main feature works, it has some major unresolved bugs which sometimes make the extension not work.
-
 Click here to access the bookmarklet:
 
 <p align="center">
