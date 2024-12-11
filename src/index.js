@@ -6,15 +6,19 @@
         return document.getElementsByTagName("video")[0];
     };
 
-    /** @type {() => HTMLImageElement} */
+    /** @type {() => HTMLImageElement | HTMLVideoElement} */
     const getSlideImage = () => {
-        const element = document.querySelector(
-            ".slp__slidesPlayer__content img",
-        );
-        if (!(element instanceof HTMLImageElement)) {
-            throw Error("Slide image not found.");
+        let element = document.querySelector(".slp__slidesPlayer__content img");
+        if (element instanceof HTMLImageElement) {
+            return element;
         }
-        return element;
+        element = document.getElementsByTagName("video")[1];
+        if (element instanceof HTMLVideoElement) {
+            element.width = element.videoWidth;
+            element.height = element.videoHeight;
+            return element;
+        }
+        throw Error("Slide image not found.");
     };
 
     /** @type {() => boolean} */
