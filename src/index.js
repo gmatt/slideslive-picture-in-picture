@@ -83,8 +83,10 @@
     const slideImage = getSlideImage();
 
     const canvas = document.createElement("canvas");
-    canvas.width = originalVideo.clientWidth + slideImage.width;
-    canvas.height = Math.max(originalVideo.clientHeight, slideImage.height);
+    const videoAspectRatio =
+        originalVideo.clientWidth / originalVideo.clientHeight;
+    canvas.width = slideImage.height * videoAspectRatio + slideImage.width;
+    canvas.height = slideImage.height;
     // For retina.
     canvas.width *= window.devicePixelRatio;
     canvas.height *= window.devicePixelRatio;
@@ -111,12 +113,18 @@
 
     const mainLoop = () => {
         var video = getVideo();
-        ctx.drawImage(video, 0, 0, video.clientWidth, video.clientHeight);
         const slideImage = getSlideImage();
+        ctx.drawImage(
+            video,
+            0,
+            0,
+            slideImage.height * videoAspectRatio,
+            slideImage.height,
+        );
         slideImage.crossOrigin = "anonymous";
         ctx.drawImage(
             slideImage,
-            originalVideo.clientWidth,
+            slideImage.height * videoAspectRatio,
             0,
             slideImage.width,
             slideImage.height,
