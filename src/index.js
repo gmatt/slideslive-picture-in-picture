@@ -114,6 +114,16 @@
     const mainLoop = () => {
         var video = getVideo();
         const slideImage = getSlideImage();
+
+        if (canvas.height !== slideImage.height * window.devicePixelRatio) {
+            // Resolution changed, resize canvas.
+            canvas.width =
+                (slideImage.height * videoAspectRatio + slideImage.width) *
+                window.devicePixelRatio;
+            canvas.height = slideImage.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
         ctx.drawImage(
             video,
             0,
